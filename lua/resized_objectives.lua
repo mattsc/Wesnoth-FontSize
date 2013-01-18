@@ -11,7 +11,7 @@ function wesnoth.wml_actions.objectives(cfg)
     local function set_objectives(sides)
         for i, team in ipairs(sides) do
             local objectives = team.objectives
-            objectives = "<span font='" .. message_size .. "'>" .. objectives .. "</span>"
+            objectives = "<span font='" .. objectives_size .. "'>" .. objectives .. "</span>"
             team.objectives = objectives
         end
     end
