@@ -1,7 +1,9 @@
 ***************** WARNING *****************************
+
   This add-on affects all Wesnoth campaigns.
   Install only if that is what you want.
-*******************************************************
+
+***************** /WARNING *****************************
 
 This add-on enlarges the font size of objectives and messages (but not of the story messages).  The actual font sizes used are constants that can be set according to one's likings in the _main.cfg file.
 
