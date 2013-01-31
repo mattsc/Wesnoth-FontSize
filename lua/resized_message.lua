@@ -29,16 +29,24 @@ function wesnoth.wml_actions.message(cfg)
         -- If speaker = unit -> get unit name
         elseif cfg.speaker == "unit" then
             local ec = wesnoth.current.event_context
-            local unit = wesnoth.get_unit(ec.x1,ec.y1)
-            if unit == nil then caption = ""
-            else caption = unit.__cfg.name end
+            if (ec.x1 and ec.y1) then
+                local unit = wesnoth.get_unit(ec.x1,ec.y1)
+                if unit == nil then caption = ""
+                else caption = unit.__cfg.name end
+            else
+                caption = ""
+            end
 
         -- If speaker = second_unit -> get second_unit name
         elseif cfg.speaker == "second_unit" then
             local ec = wesnoth.current.event_context
-            local second_unit = wesnoth.get_unit(ec.x2,ec.y2)
-            if second_unit == nil then caption = ""
-            else caption = second_unit.__cfg.name end
+            if (ec.x2 and ec.y2) then
+                local second_unit = wesnoth.get_unit(ec.x2,ec.y2)
+                if second_unit == nil then caption = ""
+                else caption = second_unit.__cfg.name end
+            else
+                caption = ""
+            end
 
         -- In all other cases, assume it's a unit id and get it, if it exists
         else
