@@ -15,7 +15,13 @@ function wesnoth.wml_actions.message(cfg)
     -- Also the message keys of the [option] tags
     for i,tag in ipairs(new_cfg) do
         if (tag[1] == "option") then
-            tag[2].message = "<span font='" .. message_size .. "'>" .. tag[2].message .. "</span>"
+            local msg = tostring(tag[2].message)
+            local first = string.sub(msg, 1, 1)
+            if (first == '&') then
+                -- This is a message in DescriptionWML format, we leave it unchanged for now
+            else
+                tag[2].message = "<span font='" .. message_size .. "'>" .. tag[2].message .. "</span>"
+            end
         end
     end
 
