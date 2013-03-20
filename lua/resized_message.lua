@@ -27,43 +27,39 @@ function wesnoth.wml_actions.message(cfg)
 
     -- All the rest is just for getting the caption text right, if it is not set
     local caption = cfg.caption
-    if caption == nil or caption == "" then
+    if (not caption) then
 
-        -- If speaker = narrator -> no caption
-        if cfg.speaker == "narrator" then caption = ""
-
-        -- If speaker = unit -> get unit name
-        elseif cfg.speaker == "unit" then
-            local ec = wesnoth.current.event_context
-            if (ec.x1 and ec.y1) then
-                local unit = wesnoth.get_unit(ec.x1,ec.y1)
-                if unit == nil then caption = ""
-                else caption = unit.__cfg.name end
+        -- if speaker is set, use it to get the caption
+        if cfg.speaker then
+            if (cfg.speaker == "narrator") then
+                -- Nothing needs to be done in this case,
+                -- but we need this option in case to distinguish if from an id
+            elseif cfg.speaker == "unit" then
+                -- get unit name
+                local ec = wesnoth.current.event_context
+                if (ec.x1 and ec.y1) then
+                    local unit = wesnoth.get_unit(ec.x1,ec.y1)
+                    if unit then caption = unit.__cfg.name end
+                end
+            elseif cfg.speaker == "second_unit" then
+                -- get second_unit name
+                local ec = wesnoth.current.event_context
+                if (ec.x2 and ec.y2) then
+                    local second_unit = wesnoth.get_unit(ec.x2,ec.y2)
+                    if second_unit then caption = second_unit.__cfg.name end
+                end
             else
-                caption = ""
+                -- In all other cases, assume it's a unit id and get it, if it exists
+                local speaker = wesnoth.get_units { id = cfg.speaker }
+                if speaker[1] then caption = speaker[1].name end
             end
-
-        -- If speaker = second_unit -> get second_unit name
-        elseif cfg.speaker == "second_unit" then
-            local ec = wesnoth.current.event_context
-            if (ec.x2 and ec.y2) then
-                local second_unit = wesnoth.get_unit(ec.x2,ec.y2)
-                if second_unit == nil then caption = ""
-                else caption = second_unit.__cfg.name end
-            else
-                caption = ""
-            end
-
-        -- In all other cases, assume it's a unit id and get it, if it exists
-        else
-            local speaker = wesnoth.get_units { id = cfg.speaker }
-            if speaker[1] == nil then caption = ""
-            else caption = speaker[1].name end
         end
     end
 
     -- Finally, use larger font for caption
-    new_cfg.caption = "<span font='" .. caption_size .. "'>" .. caption .. "</span>"
+    if caption then
+        new_cfg.caption = "<span font='" .. caption_size .. "'>" .. caption .. "</span>"
+    end
 
     old_message(new_cfg)
 end
